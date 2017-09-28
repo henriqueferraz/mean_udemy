@@ -1,7 +1,7 @@
 (function() {
   angular
     .module("primeiraApp")
-    .controller("DashboardCtrl", [$http, DashboardController]);
+    .controller("DashboardCtrl", ["$http", DashboardController]);
 
   function DashboardController($http) {
     const vm = this;
