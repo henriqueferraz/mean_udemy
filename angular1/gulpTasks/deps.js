@@ -3,11 +3,10 @@ const uglify = require("gulp-uglify");
 const uglifycss = require("gulp-uglifycss");
 const concat = require("gulp-concat");
 
-
 gulp.task("deps", ["deps.fonts", "deps.css", "deps.js"]);
 
-gulp.task("deps.js", function() {
-  gulp
+gulp.task("deps.js", () => {
+  return gulp
     .src([
       "node_modules/angular/angular.min.js",
       "node_modules/angular-ui-router/release/angular-ui-router.min.js",
@@ -23,8 +22,8 @@ gulp.task("deps.js", function() {
     .pipe(gulp.dest("public/assets/js"));
 });
 
-gulp.task("deps.css", function() {
-  gulp
+gulp.task("deps.css", () => {
+  return gulp
     .src([
       "node_modules/angular-toastr/dist/angular-toastr.min.css",
       "node_modules/font-awesome/css/font-awesome.min.css",
@@ -37,8 +36,8 @@ gulp.task("deps.css", function() {
     .pipe(gulp.dest("public/assets/css"));
 });
 
-gulp.task("deps.fonts", function() {
-  gulp
+gulp.task("deps.fonts", () => {
+  return gulp
     .src([
       "node_modules/font-awesome/fonts/*.*",
       "node_modules/admin-lte/bootstrap/fonts/*.*"
