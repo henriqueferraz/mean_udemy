@@ -7,3 +7,11 @@ html {
   width: 100%;
   text-align: center;
 }
+
+#toast-container {
+  top: 20%;
+}
+
+.table-actions {
+  width: 10%;
+}
