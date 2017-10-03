@@ -1,4 +1,4 @@
-(function () {
+(function() {
   angular
     .module("primeiraApp")
     .controller("BillingCycleCtrl", [
@@ -11,10 +11,10 @@
   function BillingCycleController($http, msgs, tabs) {
     const vm = this;
     const url = "http://localhost:3003/api/billingCycles";
-    const selectUrl = `${url}/${vm.billingCycle._id}`;
-    vm.refresh = function () {
-      $http.get(url).then(function (response) {
-        vm.billingCycle = {};
+
+    vm.refresh = function() {
+      $http.get(url).then(function(response) {
+        vm.billingCycle = { credits: [{}], debits: [{}] };
         vm.billingCycles = response.data;
         tabs.show(vm, {
           tabList: true,
@@ -22,55 +22,58 @@
         });
       });
     };
-    vm.create = function () {
+    vm.create = function() {
       $http
         .post(url, vm.billingCycle)
-        .then(function (response) {
+        .then(function(response) {
           vm.refresh();
           msgs.addSuccess("Operação realizada com sucesso!");
         })
-        .catch(function (resp) {
+        .catch(function(resp) {
           msgs.addError(resp.data.errors);
         });
     };
 
-    vm.showTabUpdate = function (billingCycle) {
+    vm.showTabUpdate = function(billingCycle) {
       vm.billingCycle = billingCycle;
       tabs.show(vm, {
         tabUpdate: true
       });
     };
 
-    vm.showTabDelete = function (billingCycle) {
+    vm.showTabDelete = function(billingCycle) {
       vm.billingCycle = billingCycle;
       tabs.show(vm, {
         tabDelete: true
       });
     };
 
-    vm.update = function () {
+    vm.delete = function() {
+      const deleteUrl = `${url}/${vm.billingCycle._id}`;
       $http
-        .put(selectUrl, vm.billingCycle)
-        .then(function (response) {
+        .delete(deleteUrl, vm.billingCycle)
+        .then(function(response) {
           vm.refresh();
           msgs.addSuccess("Operação realizada com sucesso");
         })
-        .catch(function (data) {
-          msgs.addError(data.errors);
-        });
-    }
-
-    vm.delete = function () {
-      $http
-        .delete(selectUrl, vm.billingCycle)
-        .then(function (response) {
-          vm.refresh();
-          msgs.addSuccess("Operação realizada com sucesso");
-        })
-        .catch(function (data) {
-          msgs.addError(data.errors);
+        .catch(function(resp) {
+          msgs.addError(resp.data.errors);
         });
     };
+
+    vm.update = function() {
+      const updateUrl = `${url}/${vm.billingCycle._id}`;
+      $http
+        .put(updateUrl, vm.billingCycle)
+        .then(function(response) {
+          vm.refresh();
+          msgs.addSuccess("Operação realizada com sucesso");
+        })
+        .catch(function(resp) {
+          msgs.addError(resp.data.errors);
+        });
+    };
+
     vm.refresh();
   }
 })();
