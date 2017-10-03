@@ -16,6 +16,7 @@
       $http.get(url).then(function(response) {
         vm.billingCycle = { credits: [{}], debits: [{}] };
         vm.billingCycles = response.data;
+        vm.calculateValue()
         tabs.show(vm, {
           tabList: true,
           tabCreate: true
@@ -36,6 +37,7 @@
 
     vm.showTabUpdate = function(billingCycle) {
       vm.billingCycle = billingCycle;
+      vm.calculateValue()
       tabs.show(vm, {
         tabUpdate: true
       });
@@ -43,6 +45,7 @@
 
     vm.showTabDelete = function(billingCycle) {
       vm.billingCycle = billingCycle;
+      vm.calculateValue()
       tabs.show(vm, {
         tabDelete: true
       });
@@ -72,6 +75,45 @@
         .catch(function(resp) {
           msgs.addError(resp.data.errors);
         });
+    };
+    vm.addCredit = function(index) {
+      vm.billingCycle.credits.splice(index + 1, 0, { name: null, value: null });
+    };
+    vm.cloneCredit = function(index, { name, value }) {
+      vm.billingCycle.credits.splice(index + 1, 0, { name, value });
+      vm.calculateValue()
+    };
+    vm.deleteCredit = function(index) {
+      if (vm.billingCycle.credits.length > 1) {
+        vm.billingCycle.credits.splice(index, 1);
+        vm.calculateValue()
+      }
+    };
+    vm.addDebt = function(index) {
+      vm.billingCycle.debits.splice(index + 1, 0, {});
+    };
+    vm.cloneDebt = function(index, { name, value, status }) {
+      vm.billingCycle.debits.splice(index + 1, 0, { name, value, status });
+      vm.calculateValue()
+    };
+    vm.deleteDebt = function(index) {
+      if (vm.billingCycle.debits.length > 1) {
+        vm.billingCycle.debits.splice(index, 1);
+        vm.calculateValue()
+      }
+    };
+    vm.calculateValue = function() {
+      vm.credit = 0;
+      vm.debt = 0;
+      if (vm.billingCycle) {
+        vm.billingCycle.credits.forEach(function({ value }) {
+          vm.credit += !value || isNaN(value) ? 0 : parseFloat(value);
+        });
+        vm.billingCycle.debits.forEach(function({ value }) {
+          vm.debt += !value || isNaN(value) ? 0 : parseFloat(value);
+        });
+        vm.total = vm.credit - vm.debt;
+      }
     };
 
     vm.refresh();

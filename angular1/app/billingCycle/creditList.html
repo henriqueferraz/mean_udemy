@@ -10,15 +10,15 @@
         <tbody>
             <tr ng-repeat="credit in bcCtrl.billingCycle.credits">
                 <td>
-                    <input ng-model="credit.nome" class="form-control" placeholder="Informe o Nome" ng-readonly="bcCtrl.tabDelete">
+                    <input ng-model="credit.name" class="form-control" placeholder="Informe o Nome" ng-readonly="bcCtrl.tabDelete">
                 </td>
                 <td>
-                    <input ng-model="credit.value" class="form-control" placeholder="Informe o Valor" ng-readonly="bcCtrl.tabDelete" type="number">
+                    <input ng-model="credit.value" class="form-control" placeholder="Informe o Valor" ng-change="bcCtrt.calculateValue()" ng-readonly="bcCtrl.tabDelete" type="number">
                 </td>
                 <td class="table-actions">
-                    <button class="btn btn-success" ng-class="{disabled: bcCtrl.tabDelete}"><i class="fa fa-plus"></i></button>
-                    <button class="btn btn-warning" ng-class="{disabled: bcCtrl.tabDelete}"><i class="fa fa-clone"></i></button>
-                    <button class="btn btn-danger" ng-class="{disabled: bcCtrl.tabDelete}"><i class="fa fa-trash-o"></i></button>
+                    <button class="btn btn-success" ng-click="bcCtrl.addCredit($index)" ng-disabled=" bcCtrl.tabDelete"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-warning" ng-click="bcCtrl.cloneCredit($index, credit)" ng-disabled=" bcCtrl.tabDelete"><i class="fa fa-clone"></i></button>
+                    <button class="btn btn-danger" ng-click="bcCtrl.deleteCredit($index)" ng-disabled=" bcCtrl.tabDelete"><i class="fa fa-trash-o"></i></button>
                 </td>
             </tr>
         </tbody>
