@@ -3,25 +3,32 @@
     .module("primeiraApp")
     .controller("BillingCycleCtrl", [
       "$http",
+      "$location",
       "msgs",
       "tabs",
       BillingCycleController
     ]);
 
-  function BillingCycleController($http, msgs, tabs) {
+  function BillingCycleController($http, $location, msgs, tabs) {
     const vm = this;
     const url = "http://localhost:3003/api/billingCycles";
 
     vm.refresh = function() {
-      $http.get(url).then(function(response) {
-        vm.billingCycle = { credits: [{}], debits: [{}] };
-        vm.billingCycles = response.data;
-        vm.calculateValue()
-        tabs.show(vm, {
-          tabList: true,
-          tabCreate: true
+      const page = parseInt($location.search().page) || 1;
+      $http
+        .get(`${url}?skip=${(page - 1) * 12}&limit=12`)
+        .then(function(response) {
+          vm.billingCycle = { credits: [{}], debits: [{}] };
+          vm.billingCycles = response.data;
+          vm.calculateValue();
+          tabs.show(vm, {
+            tabList: true,
+            tabCreate: true
+          });
+          $http.get(`${url}/count`).then(function(response) {
+            vm.pages = Math.ceil(response.data.value / 12);
+          });
         });
-      });
     };
     vm.create = function() {
       $http
@@ -37,7 +44,7 @@
 
     vm.showTabUpdate = function(billingCycle) {
       vm.billingCycle = billingCycle;
-      vm.calculateValue()
+      vm.calculateValue();
       tabs.show(vm, {
         tabUpdate: true
       });
@@ -45,7 +52,7 @@
 
     vm.showTabDelete = function(billingCycle) {
       vm.billingCycle = billingCycle;
-      vm.calculateValue()
+      vm.calculateValue();
       tabs.show(vm, {
         tabDelete: true
       });
@@ -81,12 +88,12 @@
     };
     vm.cloneCredit = function(index, { name, value }) {
       vm.billingCycle.credits.splice(index + 1, 0, { name, value });
-      vm.calculateValue()
+      vm.calculateValue();
     };
     vm.deleteCredit = function(index) {
       if (vm.billingCycle.credits.length > 1) {
         vm.billingCycle.credits.splice(index, 1);
-        vm.calculateValue()
+        vm.calculateValue();
       }
     };
     vm.addDebt = function(index) {
@@ -94,12 +101,12 @@
     };
     vm.cloneDebt = function(index, { name, value, status }) {
       vm.billingCycle.debits.splice(index + 1, 0, { name, value, status });
-      vm.calculateValue()
+      vm.calculateValue();
     };
     vm.deleteDebt = function(index) {
       if (vm.billingCycle.debits.length > 1) {
         vm.billingCycle.debits.splice(index, 1);
-        vm.calculateValue()
+        vm.calculateValue();
       }
     };
     vm.calculateValue = function() {
