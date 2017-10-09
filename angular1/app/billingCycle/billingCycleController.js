@@ -16,17 +16,18 @@
     vm.refresh = function() {
       const page = parseInt($location.search().page) || 1;
       $http
-        .get(`${url}?skip=${(page - 1) * 12}&limit=12`)
+        .get(`${url}?skip=${(page - 1) * 3}&limit=3`)
         .then(function(response) {
           vm.billingCycle = { credits: [{}], debits: [{}] };
           vm.billingCycles = response.data;
           vm.calculateValue();
-          tabs.show(vm, {
-            tabList: true,
-            tabCreate: true
-          });
+
           $http.get(`${url}/count`).then(function(response) {
-            vm.pages = Math.ceil(response.data.value / 12);
+            vm.pages = Math.ceil(response.data.value / 3);
+            tabs.show(vm, {
+              tabList: true,
+              tabCreate: true
+            });
           });
         });
     };
@@ -37,8 +38,8 @@
           vm.refresh();
           msgs.addSuccess("Operação realizada com sucesso!");
         })
-        .catch(function(resp) {
-          msgs.addError(resp.data.errors);
+        .catch(function(response) {
+          msgs.addError(response.data.errors);
         });
     };
 
@@ -66,8 +67,8 @@
           vm.refresh();
           msgs.addSuccess("Operação realizada com sucesso");
         })
-        .catch(function(resp) {
-          msgs.addError(resp.data.errors);
+        .catch(function(response) {
+          msgs.addError(response.data.errors);
         });
     };
 
@@ -79,8 +80,8 @@
           vm.refresh();
           msgs.addSuccess("Operação realizada com sucesso");
         })
-        .catch(function(resp) {
-          msgs.addError(resp.data.errors);
+        .catch(function(response) {
+          msgs.addError(response.data.errors);
         });
     };
     vm.addCredit = function(index) {
