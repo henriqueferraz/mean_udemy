@@ -1,17 +1,13 @@
 html {
   background-color: #ecf0f5;
 }
+
 .main-footer {
   position: fixed;
-  bottom: 0px;
-  width: 100%;
-  text-align: center;
+  bottom:0px;
+  width:100%;
 }
 
 #toast-container {
-  top: 20%;
-}
-
-.table-actions {
-  width: 30%;
+  top: 70px;
 }
